@@ -6,13 +6,13 @@ import numpy as np
 
 df = pd.read_json('drivers_messages.json')
 
-def hist(param):
-    fig, ax = plt.subplots(1, figsize=(12, 7))
-    plt.title(f'{param}', loc='center', fontsize=14)
-    plt.xlabel(f'\nИнтервалы {param}', fontsize=12)
-    plt.ylabel('Частота записей', fontsize=12)
+def hist(param, plot_size, bins, title='', xlabel_name='', ylabel_name=''):
+    fig, ax = plt.subplots(1, figsize=plot_size)
+    plt.title(f'{title}', loc='center', fontsize=14)
+    plt.xlabel(f'\n{xlabel_name}', fontsize=12)
+    plt.ylabel(f'{ylabel_name}', fontsize=12)
 
-    n, bins, patches = plt.hist(df[param], edgecolor='w', bins=10)
+    n, bins, patches = plt.hist(df[param], edgecolor='w', bins=bins)
     binspie = bins
 
     minor_locator = AutoMinorLocator(2)
@@ -63,17 +63,13 @@ def piechart(param, binspie):
 def main():
     print(df)
 
-    bins = hist('sound')
-    plot('sound')
-    piechart('sound', bins)
+    params = ['sound', 'illuminance', 'voltage']
 
-    bins = hist('illuminance')
-    plot('illuminance')
-    piechart('illuminance', bins)
-
-    bins = hist('voltage')
-    plot('voltage')
-    piechart('voltage', bins)
+    for param in params:
+        bins = hist(param, plot_size=(12, 7), bins=10, title=f'{param}',
+                    xlabel_name=f'Интервалы уровня {param}', ylabel_name='Частота записей')
+        plot(param)
+        piechart(param, bins)
 
 if __name__ == '__main__':
     main()
